@@ -1,0 +1,142 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ----------------------------------------------------------------------------
+   Reggals — design tokens (CSS variables mirror tailwind.config.ts)
+---------------------------------------------------------------------------- */
+:root {
+  --color-ivory: #fbf8f4;
+  --color-offwhite: #faf7f2;
+  --color-charcoal: #1f1a17;
+  --color-charcoal-muted: #4a423d;
+  --color-rose-gold: #b76e79;
+  --color-rose-deep: #9a5560;
+  --color-blush: #f6e1de;
+  --color-gold-leaf: #c9a66b;
+  --color-line: #e8dfd5;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+
+  --shadow-soft: 0 1px 2px rgba(31, 26, 23, 0.04),
+    0 8px 24px -12px rgba(31, 26, 23, 0.1);
+  --shadow-luxe: 0 30px 60px -30px rgba(154, 85, 96, 0.25);
+
+  /* 8-pt spacing scale handled by Tailwind. */
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply bg-offwhite text-charcoal font-sans;
+    font-feature-settings: 'ss01', 'cv11';
+  }
+
+  ::selection {
+    background: var(--color-blush);
+    color: var(--color-charcoal);
+  }
+
+  /* Editorial headings */
+  h1, h2, h3, h4 {
+    @apply font-display tracking-tight text-charcoal;
+    font-feature-settings: 'liga', 'dlig', 'lnum';
+  }
+  h1 { @apply text-4xl md:text-6xl leading-[1.05]; }
+  h2 { @apply text-3xl md:text-5xl leading-[1.08]; }
+  h3 { @apply text-2xl md:text-3xl leading-[1.15]; }
+
+  p { @apply text-charcoal-muted leading-relaxed; }
+
+  a {
+    @apply transition-colors duration-300;
+  }
+
+  :focus-visible {
+    @apply outline-none ring-2 ring-rose-gold ring-offset-2 ring-offset-offwhite rounded-sm;
+  }
+
+  hr { @apply border-line; }
+
+  /* Form resets — luxury feel */
+  input, textarea, select {
+    @apply bg-transparent;
+  }
+}
+
+@layer components {
+  .container-luxe {
+    @apply container max-w-[1400px];
+  }
+
+  .eyebrow {
+    @apply text-eyebrow uppercase font-medium text-rose-gold tracking-regal;
+  }
+
+  .rule {
+    @apply h-px w-12 bg-rose-gold/60;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full
+           bg-charcoal text-ivory px-7 py-3.5 text-sm tracking-luxe uppercase
+           transition-all duration-500 hover:bg-rose-deep hover:shadow-luxe;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-full
+           border border-charcoal/20 text-charcoal px-7 py-3.5 text-sm tracking-luxe uppercase
+           transition-all duration-500 hover:border-rose-gold hover:text-rose-gold;
+  }
+
+  .btn-link {
+    @apply inline-flex items-center gap-2 text-sm tracking-luxe uppercase text-charcoal
+           border-b border-charcoal/40 pb-1 transition-colors hover:text-rose-gold hover:border-rose-gold;
+  }
+
+  .card {
+    @apply rounded-xl2 bg-ivory border border-line/60 shadow-soft;
+  }
+
+  .field {
+    @apply w-full border-b border-charcoal/20 bg-transparent py-3 text-charcoal
+           placeholder:text-charcoal-soft focus:border-rose-gold transition-colors;
+  }
+
+  /* Skeleton shimmer */
+  .skeleton {
+    background: linear-gradient(90deg, #efe7dc 0%, #f7f0e6 50%, #efe7dc 100%);
+    background-size: 200% 100%;
+    @apply animate-shimmer rounded-md;
+  }
+}
+
+@layer utilities {
+  .balanced { text-wrap: balance; }
+  .pretty { text-wrap: pretty; }
+
+  .grid-gallery {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
