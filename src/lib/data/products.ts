@@ -22,7 +22,7 @@ export const products: Product[] = [
       img('photo-1611591437281-460bfbe1220a'),
       img('photo-1599643478518-a784e5dc4c8f'),
       img('photo-1605100804763-247f67b3557e'),
-      img('photo-1535632066274-95ec19b04f8e')
+      img('photo-1611652022419-a9419f74343d')
     ],
     categories: ['jewelry', 'personalized'],
     occasions: ['birthday', 'anniversary', 'valentine', 'just-because'],
@@ -116,8 +116,8 @@ export const products: Product[] = [
     hero: img('photo-1556228453-efd6c1ff04f6'),
     images: [
       img('photo-1556228453-efd6c1ff04f6'),
-      img('photo-1522335789203-aaa749a9d61c'),
-      img('photo-1620916566398-39f1143ab7be')
+      img('photo-1620916566398-39f1143ab7be'),
+      img('photo-1556228720-195a672e8a03')
     ],
     categories: ['beauty', 'self-care', 'gift-boxes'],
     occasions: ['birthday', 'mothers-day', 'thank-you', 'just-because'],
@@ -226,11 +226,11 @@ export const products: Product[] = [
     currency: 'INR',
     rating: 4.9,
     reviewCount: 401,
-    hero: img('photo-1535632066274-95ec19b04f8e'),
+    hero: img('photo-1611652022419-a9419f74343d'),
     images: [
-      img('photo-1535632066274-95ec19b04f8e'),
+      img('photo-1611652022419-a9419f74343d'),
       img('photo-1611591437281-460bfbe1220a'),
-      img('photo-1611652022419-a9419f74343d')
+      img('photo-1599643478518-a784e5dc4c8f')
     ],
     categories: ['jewelry', 'personalized'],
     occasions: ['valentine', 'anniversary', 'birthday', 'just-because'],

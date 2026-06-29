@@ -20,7 +20,7 @@ export const categories: Category[] = [
     name: 'Beauty',
     tagline: 'Curated, clean, considered',
     image:
-      'https://images.unsplash.com/photo-1522335789203-aaa749a9d61c?auto=format&fit=crop&w=1400&q=80'
+      'https://images.unsplash.com/photo-1556228453-efd6c1ff04f6?auto=format&fit=crop&w=1400&q=80'
   },
   {
     slug: 'self-care',
@@ -116,13 +116,13 @@ export const occasions: Occasion[] = [
     slug: 'mothers-day',
     name: 'Mother’s Day',
     image:
-      'https://images.unsplash.com/photo-1527383398725-c2a3df27d479?auto=format&fit=crop&w=1200&q=80'
+      'https://images.unsplash.com/photo-1487530811176-3780de880c2d?auto=format&fit=crop&w=1200&q=80'
   },
   {
     slug: 'raksha-bandhan',
     name: 'Raksha Bandhan',
     image:
-      'https://images.unsplash.com/photo-1597223557154-721c1cecc4b0?auto=format&fit=crop&w=1200&q=80'
+      'https://images.unsplash.com/photo-1530103862676-de8c9debad1d?auto=format&fit=crop&w=1200&q=80'
   },
   {
     slug: 'wedding',

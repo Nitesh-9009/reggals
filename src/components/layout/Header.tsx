@@ -214,25 +214,25 @@ export function Header() {
               </Link>
             </div>
           </div>
+        </div>
 
-          {/* Mega menus — fade + lift in/out, with hover-intent stay-open */}
-          <div
-            className={cn(
-              'absolute left-0 right-0 top-full bg-offwhite/97 backdrop-blur-md border-t border-line shadow-soft',
-              'transition-all duration-300 ease-out',
-              openMenu
-                ? 'opacity-100 translate-y-0 pointer-events-auto'
-                : 'opacity-0 -translate-y-2 pointer-events-none'
-            )}
-            aria-hidden={!openMenu}
-            onMouseEnter={cancelClose}
-            onMouseLeave={scheduleClose}
-          >
-            <div className="container-luxe py-12">
-              {openMenu === 'categories' && <CategoryMenu onNavigate={closeNow} />}
-              {openMenu === 'occasions' && <OccasionMenu onNavigate={closeNow} />}
-              {openMenu === 'collections' && <CollectionMenu onNavigate={closeNow} />}
-            </div>
+        {/* Mega menu — full viewport width, solid background, sits inside the sticky header */}
+        <div
+          className={cn(
+            'absolute left-0 right-0 top-full w-full bg-offwhite border-t border-line shadow-soft',
+            'transition-all duration-300 ease-out',
+            openMenu
+              ? 'opacity-100 translate-y-0 pointer-events-auto'
+              : 'opacity-0 -translate-y-2 pointer-events-none'
+          )}
+          aria-hidden={!openMenu}
+          onMouseEnter={cancelClose}
+          onMouseLeave={scheduleClose}
+        >
+          <div className="container-luxe py-12">
+            {openMenu === 'categories' && <CategoryMenu onNavigate={closeNow} />}
+            {openMenu === 'occasions' && <OccasionMenu onNavigate={closeNow} />}
+            {openMenu === 'collections' && <CollectionMenu onNavigate={closeNow} />}
           </div>
         </div>
       </header>
@@ -242,7 +242,7 @@ export function Header() {
         aria-hidden
         onClick={closeNow}
         className={cn(
-          'fixed inset-0 top-[calc(2.5rem+5rem)] bg-charcoal/15 backdrop-blur-[1px] transition-opacity duration-300 z-30',
+          'fixed inset-0 bg-charcoal/25 transition-opacity duration-300 z-30',
           openMenu ? 'opacity-100' : 'opacity-0 pointer-events-none'
         )}
       />
