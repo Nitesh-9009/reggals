@@ -19,6 +19,7 @@ export function Footer() {
       heading: 'Care',
       links: [
         { href: '/support', label: 'Customer Support' },
+        { href: '/concierge', label: 'Gift Concierge' },
         { href: '/faqs', label: 'FAQs' },
         { href: '/account/orders', label: 'Track Order' },
         { href: '/shipping-policy', label: 'Shipping' },

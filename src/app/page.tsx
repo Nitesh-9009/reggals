@@ -1,8 +1,10 @@
 import { Hero } from '@/components/marketing/Hero';
+import { TrustStrip } from '@/components/marketing/TrustStrip';
 import { OccasionStrip } from '@/components/marketing/OccasionStrip';
 import { FeaturedCollections } from '@/components/marketing/FeaturedCollections';
 import { ProductGrid } from '@/components/product/ProductGrid';
 import { CategoryMosaic } from '@/components/marketing/CategoryMosaic';
+import { ConciergeBanner } from '@/components/marketing/ConciergeBanner';
 import { PriceTiers } from '@/components/marketing/PriceTiers';
 import { CustomerStories } from '@/components/marketing/CustomerStories';
 import { InstagramGallery } from '@/components/marketing/InstagramGallery';
@@ -18,6 +20,7 @@ export default function HomePage() {
   return (
     <>
       <Hero />
+      <TrustStrip />
       <OccasionStrip />
       <FeaturedCollections />
       <ProductGrid
@@ -28,6 +31,7 @@ export default function HomePage() {
         cta={{ label: 'Shop bestsellers', href: '/shop?tag=bestseller' }}
       />
       <CategoryMosaic />
+      <ConciergeBanner />
       <ProductGrid
         products={newArrivals}
         eyebrow="New Arrivals"

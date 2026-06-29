@@ -322,9 +322,94 @@ export function PDPView({ product, reviews }: { product: Product; reviews: Revie
               </article>
             ))}
           </div>
+
+          {/* Review submission */}
+          <ReviewForm />
         </section>
       </div>
+
+      {/* Sticky mobile add-to-bag */}
+      <div className="lg:hidden fixed bottom-0 inset-x-0 z-30 bg-ivory/95 backdrop-blur-md border-t border-line p-3 shadow-luxe">
+        <div className="flex items-center gap-3">
+          <div className="flex-1">
+            <p className="text-sm font-medium leading-tight line-clamp-1">{product.name}</p>
+            <p className="text-eyebrow uppercase tracking-luxe text-charcoal-soft mt-0.5">
+              {formatPrice(product.price)}{variant ? ` · ${variant}` : ''}
+            </p>
+          </div>
+          <button onClick={handleAdd} className="btn-primary flex-none">
+            Add to bag
+          </button>
+        </div>
+      </div>
     </section>
+  );
+}
+
+function ReviewForm() {
+  const [rating, setRating] = useState(5);
+  const [title, setTitle] = useState('');
+  const [body, setBody] = useState('');
+  const [submitted, setSubmitted] = useState(false);
+
+  if (submitted) {
+    return (
+      <div className="mt-12 card p-8 bg-blush/30 text-center">
+        <p className="font-display text-2xl balanced">Thank you for your kind words.</p>
+        <p className="mt-2 text-charcoal-muted">Your review will appear here shortly after a soft check.</p>
+      </div>
+    );
+  }
+
+  return (
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        setSubmitted(true);
+      }}
+      className="mt-12 card p-8"
+    >
+      <p className="eyebrow mb-3">Share your thoughts</p>
+      <p className="font-display text-2xl">Write a review</p>
+      <div className="mt-6 flex items-center gap-1">
+        {Array.from({ length: 5 }).map((_, i) => (
+          <button
+            type="button"
+            key={i}
+            onClick={() => setRating(i + 1)}
+            aria-label={`Rate ${i + 1} stars`}
+            className="p-1"
+          >
+            <Star
+              className={cn(
+                'h-6 w-6 transition-colors',
+                i < rating ? 'fill-rose-gold text-rose-gold' : 'text-charcoal/20'
+              )}
+            />
+          </button>
+        ))}
+      </div>
+      <div className="mt-6 space-y-4">
+        <input
+          required
+          maxLength={80}
+          placeholder="A short title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          className="field"
+        />
+        <textarea
+          required
+          rows={4}
+          placeholder="Tell us about your experience…"
+          value={body}
+          onChange={(e) => setBody(e.target.value)}
+          maxLength={1000}
+          className="w-full bg-ivory/60 border border-line rounded-md py-3 px-4 outline-none focus:border-rose-gold resize-none"
+        />
+      </div>
+      <button className="btn-primary mt-6">Submit review</button>
+    </form>
   );
 }
 

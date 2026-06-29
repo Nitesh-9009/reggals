@@ -18,8 +18,8 @@ const navLinks: NavLink[] = [
   { label: 'Categories', key: 'categories' },
   { label: 'Occasions', key: 'occasions' },
   { label: 'Collections', key: 'collections' },
+  { label: 'Concierge', href: '/concierge' },
   { label: 'New Arrivals', href: '/shop?tag=new' },
-  { label: 'Luxury', href: '/shop?collection=midnight-bloom' },
   { label: 'Personalized', href: '/shop?category=personalized' }
 ];
 

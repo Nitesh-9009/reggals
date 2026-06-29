@@ -35,6 +35,11 @@ export default function SignInPage() {
               <span className="text-eyebrow uppercase tracking-luxe text-charcoal-muted">Password</span>
               <input className="field" type="password" placeholder="••••••••" />
             </label>
+            <div className="text-right">
+              <Link href="/forgot" className="text-eyebrow uppercase tracking-luxe text-charcoal-soft hover:text-rose-gold">
+                Forgot password?
+              </Link>
+            </div>
             <button className="btn-primary w-full">Sign in</button>
             <button type="button" className="btn-ghost w-full">Continue with Google</button>
           </form>
