@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Search, Heart, ShoppingBag, User, Menu, X } from 'lucide-react';
 import { Logo } from '@/components/ui/Logo';
 import { useCart } from '@/lib/store/cart';
@@ -10,8 +10,10 @@ import { useWishlist } from '@/lib/store/wishlist';
 import { categories, occasions, collections } from '@/lib/data/taxonomy';
 import { cn } from '@/lib/utils';
 
+type MenuKey = 'categories' | 'occasions' | 'collections';
+
 type NavLink =
-  | { label: string; key: 'categories' | 'occasions' | 'collections' }
+  | { label: string; key: MenuKey }
   | { label: string; href: string };
 
 const navLinks: NavLink[] = [
@@ -23,6 +25,9 @@ const navLinks: NavLink[] = [
   { label: 'Personalized', href: '/shop?category=personalized' }
 ];
 
+const OPEN_DELAY = 90;
+const CLOSE_DELAY = 180;
+
 export function Header() {
   const cartCount = useCart((s) => s.count());
   const cartOpen = useCart((s) => s.open);
@@ -30,7 +35,55 @@ export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
-  const [openMenu, setOpenMenu] = useState<null | 'categories' | 'occasions' | 'collections'>(null);
+  const [openMenu, setOpenMenu] = useState<MenuKey | null>(null);
+
+  // Hover-intent timers
+  const openTimer = useRef<number | null>(null);
+  const closeTimer = useRef<number | null>(null);
+
+  const clearTimers = () => {
+    if (openTimer.current) {
+      window.clearTimeout(openTimer.current);
+      openTimer.current = null;
+    }
+    if (closeTimer.current) {
+      window.clearTimeout(closeTimer.current);
+      closeTimer.current = null;
+    }
+  };
+
+  const scheduleOpen = (key: MenuKey) => {
+    clearTimers();
+    // If a menu is already open, switch instantly (feels right).
+    if (openMenu) {
+      setOpenMenu(key);
+      return;
+    }
+    openTimer.current = window.setTimeout(() => setOpenMenu(key), OPEN_DELAY);
+  };
+
+  const scheduleClose = () => {
+    if (openTimer.current) {
+      window.clearTimeout(openTimer.current);
+      openTimer.current = null;
+    }
+    if (closeTimer.current) window.clearTimeout(closeTimer.current);
+    closeTimer.current = window.setTimeout(() => setOpenMenu(null), CLOSE_DELAY);
+  };
+
+  const cancelClose = () => {
+    if (closeTimer.current) {
+      window.clearTimeout(closeTimer.current);
+      closeTimer.current = null;
+    }
+  };
+
+  const closeNow = () => {
+    clearTimers();
+    setOpenMenu(null);
+  };
+
+  useEffect(() => () => clearTimers(), []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -43,6 +96,15 @@ export function Header() {
     document.body.style.overflow = mobileOpen ? 'hidden' : '';
   }, [mobileOpen]);
 
+  // Close on Escape
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') closeNow();
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
+
   return (
     <>
       {/* Announcement bar */}
@@ -53,9 +115,8 @@ export function Header() {
       <header
         className={cn(
           'sticky top-0 z-40 bg-offwhite/85 backdrop-blur-md transition-all duration-500 border-b',
-          scrolled ? 'border-line' : 'border-transparent'
+          scrolled || openMenu ? 'border-line' : 'border-transparent'
         )}
-        onMouseLeave={() => setOpenMenu(null)}
       >
         <div className="container-luxe">
           <div className="flex items-center justify-between h-20">
@@ -76,6 +137,8 @@ export function Header() {
                   <Link
                     key={link.label}
                     href={link.href}
+                    onMouseEnter={scheduleClose}
+                    onClick={closeNow}
                     className="text-sm tracking-luxe uppercase text-charcoal hover:text-rose-gold transition-colors"
                   >
                     {link.label}
@@ -83,11 +146,21 @@ export function Header() {
                 ) : (
                   <button
                     key={link.label}
-                    onMouseEnter={() => setOpenMenu(link.key)}
-                    onFocus={() => setOpenMenu(link.key)}
+                    type="button"
+                    aria-expanded={openMenu === link.key}
+                    aria-haspopup="true"
+                    onMouseEnter={() => scheduleOpen(link.key)}
+                    onMouseLeave={scheduleClose}
+                    onFocus={() => scheduleOpen(link.key)}
+                    onClick={() =>
+                      setOpenMenu((current) => (current === link.key ? null : link.key))
+                    }
                     className={cn(
-                      'text-sm tracking-luxe uppercase transition-colors',
-                      openMenu === link.key ? 'text-rose-gold' : 'text-charcoal hover:text-rose-gold'
+                      'text-sm tracking-luxe uppercase transition-colors relative py-2',
+                      'after:absolute after:left-1/2 after:-translate-x-1/2 after:bottom-0 after:h-px after:bg-rose-gold after:transition-all after:duration-300',
+                      openMenu === link.key
+                        ? 'text-rose-gold after:w-6'
+                        : 'text-charcoal hover:text-rose-gold after:w-0 hover:after:w-6'
                     )}
                   >
                     {link.label}
@@ -100,6 +173,7 @@ export function Header() {
               <button
                 aria-label="Search"
                 onClick={() => setSearchOpen(true)}
+                onMouseEnter={scheduleClose}
                 className="p-2 text-charcoal hover:text-rose-gold transition-colors"
               >
                 <Search className="h-5 w-5" />
@@ -107,6 +181,7 @@ export function Header() {
               <Link
                 href="/wishlist"
                 aria-label="Wishlist"
+                onMouseEnter={scheduleClose}
                 className="relative p-2 text-charcoal hover:text-rose-gold transition-colors"
               >
                 <Heart className="h-5 w-5" />
@@ -118,6 +193,7 @@ export function Header() {
               </Link>
               <button
                 onClick={cartOpen}
+                onMouseEnter={scheduleClose}
                 aria-label="Cart"
                 className="relative p-2 text-charcoal hover:text-rose-gold transition-colors"
               >
@@ -130,6 +206,7 @@ export function Header() {
               </button>
               <Link
                 href="/account"
+                onMouseEnter={scheduleClose}
                 aria-label="Account"
                 className="hidden sm:inline-flex p-2 text-charcoal hover:text-rose-gold transition-colors"
               >
@@ -138,21 +215,37 @@ export function Header() {
             </div>
           </div>
 
-          {/* Mega menus */}
-          {openMenu && (
-            <div
-              className="absolute left-0 right-0 top-full bg-offwhite/97 backdrop-blur-md border-t border-line shadow-soft animate-fade-up"
-              onMouseEnter={() => setOpenMenu(openMenu)}
-            >
-              <div className="container-luxe py-12">
-                {openMenu === 'categories' && <CategoryMenu />}
-                {openMenu === 'occasions' && <OccasionMenu />}
-                {openMenu === 'collections' && <CollectionMenu />}
-              </div>
+          {/* Mega menus — fade + lift in/out, with hover-intent stay-open */}
+          <div
+            className={cn(
+              'absolute left-0 right-0 top-full bg-offwhite/97 backdrop-blur-md border-t border-line shadow-soft',
+              'transition-all duration-300 ease-out',
+              openMenu
+                ? 'opacity-100 translate-y-0 pointer-events-auto'
+                : 'opacity-0 -translate-y-2 pointer-events-none'
+            )}
+            aria-hidden={!openMenu}
+            onMouseEnter={cancelClose}
+            onMouseLeave={scheduleClose}
+          >
+            <div className="container-luxe py-12">
+              {openMenu === 'categories' && <CategoryMenu onNavigate={closeNow} />}
+              {openMenu === 'occasions' && <OccasionMenu onNavigate={closeNow} />}
+              {openMenu === 'collections' && <CollectionMenu onNavigate={closeNow} />}
             </div>
-          )}
+          </div>
         </div>
       </header>
+
+      {/* Soft backdrop while a megamenu is open — clicking it dismisses */}
+      <div
+        aria-hidden
+        onClick={closeNow}
+        className={cn(
+          'fixed inset-0 top-[calc(2.5rem+5rem)] bg-charcoal/15 backdrop-blur-[1px] transition-opacity duration-300 z-30',
+          openMenu ? 'opacity-100' : 'opacity-0 pointer-events-none'
+        )}
+      />
 
       {/* Mobile drawer */}
       <MobileNav open={mobileOpen} onClose={() => setMobileOpen(false)} />
@@ -161,7 +254,7 @@ export function Header() {
   );
 }
 
-function CategoryMenu() {
+function CategoryMenu({ onNavigate }: { onNavigate: () => void }) {
   return (
     <div className="grid grid-cols-12 gap-10">
       <div className="col-span-7 grid grid-cols-3 gap-x-8 gap-y-3">
@@ -170,6 +263,7 @@ function CategoryMenu() {
           <Link
             key={c.slug}
             href={`/shop?category=${c.slug}`}
+            onClick={onNavigate}
             className="group flex items-baseline justify-between border-b border-line py-2.5 text-charcoal hover:text-rose-gold transition-colors"
           >
             <span className="font-display text-lg">{c.name}</span>
@@ -184,6 +278,7 @@ function CategoryMenu() {
           <Link
             key={c.slug}
             href={`/shop?category=${c.slug}`}
+            onClick={onNavigate}
             className="relative aspect-[4/5] overflow-hidden rounded-xl2 group"
           >
             <Image
@@ -207,7 +302,7 @@ function CategoryMenu() {
   );
 }
 
-function OccasionMenu() {
+function OccasionMenu({ onNavigate }: { onNavigate: () => void }) {
   return (
     <div className="grid grid-cols-12 gap-10">
       <div className="col-span-7 grid grid-cols-2 gap-x-8 gap-y-3">
@@ -216,6 +311,7 @@ function OccasionMenu() {
           <Link
             key={o.slug}
             href={`/shop?occasion=${o.slug}`}
+            onClick={onNavigate}
             className="group flex items-baseline justify-between border-b border-line py-2.5 text-charcoal hover:text-rose-gold transition-colors"
           >
             <span className="font-display text-lg">{o.name}</span>
@@ -243,13 +339,14 @@ function OccasionMenu() {
   );
 }
 
-function CollectionMenu() {
+function CollectionMenu({ onNavigate }: { onNavigate: () => void }) {
   return (
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
       {collections.map((c) => (
         <Link
           key={c.slug}
           href={`/collections/${c.slug}`}
+          onClick={onNavigate}
           className="group relative aspect-[3/4] overflow-hidden rounded-xl2"
         >
           <Image
