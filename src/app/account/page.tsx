@@ -23,7 +23,7 @@ export default function AccountOverview() {
         <p className="text-charcoal-muted mt-2 pretty">
           Tell us about her — a few quiet questions, and we’ll hand-curate the perfect gift.
         </p>
-        <Link href="/concierge" className="btn-primary mt-6 inline-flex">
+        <Link href="/support" className="btn-primary mt-6 inline-flex">
           <Gift className="h-4 w-4" /> Start a curation
         </Link>
       </section>

@@ -6,7 +6,6 @@ import Image from 'next/image';
 import { Check, ChevronRight, ShieldCheck, Truck, Lock } from 'lucide-react';
 import { useCart } from '@/lib/store/cart';
 import { formatPrice, cn } from '@/lib/utils';
-import { Confetti } from '@/components/commerce/Confetti';
 
 const steps = ['Address', 'Delivery', 'Payment', 'Review'] as const;
 type Step = (typeof steps)[number];
@@ -243,8 +242,7 @@ function Summary({ label, value }: { label: string; value: string }) {
 
 function SuccessScreen({ orderNumber }: { orderNumber: string }) {
   return (
-    <section className="container-luxe py-24 text-center max-w-2xl mx-auto relative">
-      <Confetti />
+    <section className="container-luxe py-24 text-center max-w-2xl mx-auto">
       <div className="w-20 h-20 mx-auto rounded-full bg-blush flex items-center justify-center mb-6">
         <Check className="h-10 w-10 text-rose-deep" />
       </div>
